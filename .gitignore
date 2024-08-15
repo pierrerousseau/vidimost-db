@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+data/
+
+# Pylint
+pylint.out
+
+# Doit
+.doit.*
+
+# Settings
+settings.yaml
+settings-docker.yaml
+
+# Ignore dynaconf secret files
+.secrets.*
+
+# vscode
+*workspace*
