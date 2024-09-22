@@ -1,6 +1,8 @@
 """ Tâches habituelles.
 """
 import os
+import subprocess
+
 
 # Constants
 CONFIG_PATH = "./app/settings"
@@ -48,11 +50,36 @@ def task_lint():
             'verbosity': 0}
 
 
+def task_mongo_up():
+    """ Lance la base mongo de dev.
+    """
+    compose = os.path.join(CONFIG_PATH, "compose-dev.yaml")
+
+    return {'actions': [f"podman-compose -f {compose}" +
+                        " up --build -d"],
+            'verbosity': 0}
+
+
+def task_mongo_down():
+    """ Ferme la base mongo de dev.
+    """
+    compose = os.path.join(CONFIG_PATH, "compose-dev.yaml")
+
+    return {'actions': [f"podman-compose -f {compose} down"],
+            'verbosity': 0}
+
+
 def task_uvicorn():
     """ Lance la version uvicorn de l'application.
     """
-    return {'actions': ["uvicorn app:app --reload"],
-            'verbosity': 2}
+    def run_uvicorn():
+        subprocess.run(['uvicorn', 'app:app', '--reload'], check=True)
+
+    return {
+        'actions': [run_uvicorn],
+        'uptodate': [None],  # Ne pas utiliser la base de données de `doit`
+        'verbosity': 2,
+    }
 
 
 def task_docker_build():

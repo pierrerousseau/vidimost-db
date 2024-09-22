@@ -26,3 +26,6 @@ settings-docker.yaml
 
 # vscode
 *workspace*
+
+# tests
+data/

@@ -27,5 +27,5 @@ Launch
 ======
 
 * doit list
-    * doit uvicorn
+    * doit --db-file .doit.serve.db uvicorn
 * once launched visit : http://localhost:8000
