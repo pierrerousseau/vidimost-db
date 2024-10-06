@@ -27,5 +27,7 @@ Launch
 ======
 
 * doit list
-    * doit --db-file .doit.serve.db uvicorn
+    * doit uvicorn
+    * doit mongo
+        * doit mongo -p down
 * once launched visit : http://localhost:8000

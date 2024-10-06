@@ -7,6 +7,7 @@ import subprocess
 # Constants
 CONFIG_PATH = "./app/settings"
 SRC_PATH    = "app"
+DOIT_CONFIG = {"backend": "json"}
 # // Constants
 
 
@@ -50,22 +51,18 @@ def task_lint():
             'verbosity': 0}
 
 
-def task_mongo_up():
-    """ Lance la base mongo de dev.
+def task_mongo():
+    """ Gère la base mongo de dev.
     """
     compose = os.path.join(CONFIG_PATH, "compose-dev.yaml")
 
-    return {'actions': [f"podman-compose -f {compose}" +
-                        " up --build -d"],
-            'verbosity': 0}
-
-
-def task_mongo_down():
-    """ Ferme la base mongo de dev.
-    """
-    compose = os.path.join(CONFIG_PATH, "compose-dev.yaml")
-
-    return {'actions': [f"podman-compose -f {compose} down"],
+    return {'actions': [f"podman-compose -f {compose} %(params)s"],
+            'params':[{"name": "params",
+                       "short": "p",
+                       "type": str,
+                       "choices": (("up --build -d", ""), ("down", "")),
+                       "default": "up --build -d",
+                       "help": "Choose between up and down"}],
             'verbosity': 0}
 
 
@@ -73,7 +70,9 @@ def task_uvicorn():
     """ Lance la version uvicorn de l'application.
     """
     def run_uvicorn():
-        subprocess.run(['uvicorn', 'app:app', '--reload'], check=True)
+        subprocess.run(['uvicorn', 'app:app', 
+                        '--reload', '--reload-exclude', 'data/**'], 
+                       check=True)
 
     return {
         'actions': [run_uvicorn],
