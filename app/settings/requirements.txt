@@ -2,7 +2,7 @@ pylint==3.2.6
 perflint==0.8.1
 
 dynaconf==3.2.6
-fastapi==0.112.0
+fastapi[standard]==0.115.2
 uvicorn[standard]==0.30.6
 
 pymongo==4.8.0

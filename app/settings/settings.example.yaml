@@ -1,0 +1,13 @@
+plugins: {"default": {}, "openmeteo": {"city": "paris",
+                                       "latitude": 48.85,
+                                       "longitude": 2.35,
+                                       "daily": "apparent_temperature_max",
+                                       "timezone": "Europe/Berlin",
+                                       "format": "csv"}}
+
+datapath: ./data
+
+db:
+  uri: mongodb://xxxx:xxxx@localhost:27017/ # uvicorn
+  # uri: mongodb://vidimost-dl:vidimost-dl@db:27017/ # docker
+  dbb: vidimost

@@ -103,3 +103,43 @@ def task_docker_compose():
     """
     return {'actions': ["docker compose -f docker-compose.yml up --build"],
             'verbosity': 2}
+
+
+def task_add_element():
+    """ Ajoute un élément à la base de données.
+    """
+    return {'actions': ["python -m app add-element " +
+                        " --code %(code)s " +
+                        " --value %(value)s " +
+                        " --label %(label)s"],
+            'params':[{"name": "code",
+                       "long": "code",
+                       "short": "c",
+                       "type": str,
+                       "default": "",
+                       "help": "Code of the element"},
+                      {"name": "value",
+                       "long": "value",
+                       "short": "v",
+                       "type": str,
+                       "default": "",
+                       "help": "Value of the element"},
+                      {"name": "label",
+                       "long": "label",
+                       "short": "l",
+                       "type": str,
+                       "default": "",
+                       "help": "Label of the element"}],
+            'verbosity': 2}
+
+
+def task_list_elements():
+    """ Liste les éléments de la base de données.
+    """
+    return {'actions': ["python -m app list-elements %(params)s"],
+            'params': [{"name": "params",
+                        "short": "p",
+                        "type": str,
+                        "default": "",
+                        "help": "Code of the element"}],
+            'verbosity': 2}

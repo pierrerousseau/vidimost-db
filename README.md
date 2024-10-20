@@ -30,4 +30,6 @@ Launch
     * doit uvicorn
     * doit mongo
         * doit mongo -p down
+    * doit add-element -c 123 -v 456 -l "test"
+    * doit list-elements
 * once launched visit : http://localhost:8000
