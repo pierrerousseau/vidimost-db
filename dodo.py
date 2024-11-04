@@ -143,3 +143,16 @@ def task_list_elements():
                         "default": "",
                         "help": "Code of the element"}],
             'verbosity': 2}
+
+
+def task_load_file():
+    """ Charge un fichier.
+    """
+    return {'actions': ["python -m app load-file --path %(path)s"],
+            'params': [{"name": "path",
+                        "long": "path",
+                        "short": "p",
+                        "type": str,
+                        "default": "",
+                        "help": "Path to the file to load"}],
+            'verbosity': 2}

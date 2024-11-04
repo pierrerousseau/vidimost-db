@@ -48,3 +48,13 @@ class BaseElement:
             self.connect(self.uri, self.db_name, self.collection_name)
         
         self.collection.insert_one(self.to_dict())
+
+    def update(self, upsert=True):
+        """ Update the element in the collection.
+        """
+        if self.collection is None:
+            self.connect(self.uri, self.db_name, self.collection_name)
+        
+        self.collection.update_one({"code": self.code},
+                                   {"$set": self.to_dict()}, 
+                                   upsert=upsert)

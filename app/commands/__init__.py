@@ -1,8 +1,10 @@
 """ This module contains the commands to manage the database from the CLI.
 """
 import click
-from app.database.models.elements import Element
 from app.config import settings
+from app.database.models.elements import Element
+from app.database.loader import load_file as cmd_load_file
+
 
 @click.group()
 def cli():
@@ -33,6 +35,15 @@ def list_elements(code):
     query = {"code": code} if code else {}
     for doc in element.db.elements.find(query):
         click.echo(Element.from_dict(doc))
+
+
+@cli.command()
+@click.option('--path', help='Data to load', type=click.Path(exists=True))
+def load_file(path):
+    """ Load a data file.
+    """
+    cmd_load_file(path)
+
 
 
 if __name__ == '__main__':
