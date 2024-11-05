@@ -7,39 +7,59 @@ from pymongo import MongoClient
 class BaseElement:
     """ Base model for the database.
     """
+    uri             = None
+    db_name         = None
+    collection_name = None
+
     client     = None
     db         = None
     collection = None
 
-    def __init__(self, uri, dbname, collection):
+    def __init__(self, uri=None, db_name=None, collection_name=None):
         """ Initialize the base model.
 
             Create a connection to the database.
         """
-        self.uri              = uri
-        self.db_name          = dbname
-        self.collection_name  = collection
-
-        self.connect(self.uri, 
-                     self.db_name, 
-                     self.collection_name)
+        if uri is not None:
+            self.uri = uri
+        
+        if db_name is not None:
+            self.db_name = db_name
+        
+        if collection_name is not None:
+            self.collection_name  = collection_name
     
-    def connect(self, uri, dbname, collection, force=False):
+    def to_dict(self):
+        """ Convert to dictionnary.
+
+            To be implemented at inheritance.
+        """
+    
+    @classmethod
+    def from_dict(cls, data):
+        """ Convert to object.
+
+            To be implemented at inheritance.
+        """
+
+    @classmethod
+    def connect(cls, uri, dbname, collection, force=False):
         """ Connect to the database.
         """
-        if self.client is None or force:
-            self.client = MongoClient(uri)
-            self.db     = self.client[dbname]
-            self.collection = self.db[collection]
+        if cls.client is None or force:
+            cls.client     = MongoClient(uri)
+            cls.db         = cls.client[dbname]
+            cls.collection = cls.db[collection]
         else:
             logging.info("Already connected to the database.")
 
-        return self.client, self.db, self.collection
+        return cls.client, cls.db, cls.collection
 
-    def close(self):
+    @classmethod
+    def close(cls):
         """ Close the connection to the database.
         """
-        self.client.close()
+        cls.client.close()
 
     def insert(self):
         """ Insert one element in the collection.
@@ -58,3 +78,17 @@ class BaseElement:
         self.collection.update_one({"code": self.code},
                                    {"$set": self.to_dict()}, 
                                    upsert=upsert)
+
+    @classmethod
+    def find_all(cls, query=None):
+        """ Find all elements matching a query.
+        """
+        if cls.collection is None:
+            cls.connect(cls.uri, cls.db_name, cls.collection_name)
+
+        if query is None:
+            query = {}
+        
+        elements = cls.collection.find(query)
+
+        return (cls.from_dict(element) for element in elements)

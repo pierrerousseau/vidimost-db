@@ -1,8 +1,11 @@
 """ This module contains the commands to manage the database from the CLI.
 """
+from datetime import datetime as dt
+
 import click
 from app.config import settings
-from app.database.models.elements import Element
+from app.database.models.elements import Element, \
+    find_all_elements
 from app.database.loader import load_file as cmd_load_file
 
 
@@ -20,7 +23,9 @@ def cli():
 def add_element(code, value, label):
     """ Add an element to the database. 
     """
-    element = Element(code=code, value=value, label=label)
+    date = dt.now()
+
+    element = Element(code, value, date, label)
     element.insert()
 
     click.echo(f"Element added: {element}")
@@ -31,10 +36,10 @@ def add_element(code, value, label):
 def list_elements(code):
     """ List elements from the database. 
     """
-    element = Element(code='', value=0)
-    query = {"code": code} if code else {}
-    for doc in element.db.elements.find(query):
-        click.echo(Element.from_dict(doc))
+    elements = find_all_elements(code=code)
+
+    for element in elements:
+        click.echo(element)
 
 
 @cli.command()

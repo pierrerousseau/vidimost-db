@@ -1,4 +1,4 @@
-""" This module contains the models for the elements table.
+""" Models for the elements collection.
 """
 from app.config import settings
 
@@ -17,15 +17,20 @@ DEFAULT_COLLECTION = 'elements'
 class Element(BaseElement):
     """ An element in the database.
     """
+    uri             = DEFAULT_URI
+    db_name         = DEFAULT_DB
+    collection_name = DEFAULT_COLLECTION
+
     def __init__(self, 
                  code, 
                  value, 
-                 date=None, 
-                 label="", 
+                 date, 
+                 label, 
                  uri=DEFAULT_URI, 
                  dbname=DEFAULT_DB,
                  collection=DEFAULT_COLLECTION):
         super().__init__(uri, dbname, collection)
+
         self.date  = date
         self.code  = code
         self.label = label
@@ -46,3 +51,13 @@ class Element(BaseElement):
 
     def __str__(self):
         return f"{self.code} - {self.label} ({self.date}): {self.value}"
+
+
+def find_all_elements(code=None):
+    """ Find all elements in the database.
+    """
+    query = {"code": code} if code else {}
+
+    elements = Element.find_all(query=query)
+
+    return elements

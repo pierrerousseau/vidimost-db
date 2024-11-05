@@ -1,4 +1,13 @@
-""" Chargement des données.
+""" Data loading.
+
+    File format example : basecode.csv
+    date;label
+    DD/MM/YYYY;value
+    DD/MM/YYYY;value
+    DD/MM/YYYY;value
+    DD/MM/YYYY;value
+    ...
+
 """
 from datetime import datetime as dt
 import os
@@ -27,30 +36,40 @@ def load_file(path, fmt_date=FMT_DATE):
     fmt_int_date = FMT_INT_DATE
     code_sep     = CODE_SEP
 
-    basecode = os.path.basename(path)
+    basecode = os.path.splitext(os.path.basename(path))[0]
+    labels   = []
 
     with open(path, 'r', encoding=encoding) as content:
-        for line in content:
+        for num, line in enumerate(content):
             line = line.strip()
-            try:
-                date, value = line.strip().split(csv_sep)
-            except ValueError as e:
-                logging.warning(f"Ignored, no enough data: {line}")
-                continue
+            if num:
+                try:
+                    date, value = line.split(csv_sep)
+                except ValueError as e:
+                    logging.warning(f"Ignored, no enough data: {line}")
+                    continue
 
-            try:
-                dtdate  = dt.strptime(date, fmt_date)
-                intdate = dtdate.strftime(fmt_int_date)
-            except ValueError as e:
-                logging.warning(f"Ignored, invalide date: {line}")
-                continue
+                try:
+                    dtdate  = dt.strptime(date, fmt_date)
+                    intdate = dtdate.strftime(fmt_int_date)
+                except ValueError as e:
+                    logging.warning(f"Ignored, invalide date: {line}")
+                    continue
 
-            if not value:
-                logging.warning(f"Ignored, no value: {line}")
-                continue
-        
-            code = code_sep.join([basecode, intdate])
+                if not value:
+                    logging.warning(f"Ignored, no value: {line}")
+                    continue
             
-            element = Element(code=code, value=value, date=dtdate)
-            element.update()
-            logging.info(f"Element added: {element}")
+                for label in labels:
+                    code = code_sep.join([basecode, label, intdate])
+                    
+                    element = Element(code, value, dtdate, label)
+                    element.update()
+                    logging.info(f"Element added: {element}")
+
+            else: # titles line
+                try:
+                    labels = [label.lower() for label in line.split(csv_sep)[1:]]
+                except ValueError as e:
+                    logging.warning(f"Ignored, no enough titles: {line}")
+                    break
