@@ -32,11 +32,11 @@ def add_element(code, value, label):
 
 
 @cli.command()
-@click.option('--code', help='Code of the element to search')
-def list_elements(code):
+@click.option('--label', help='Code of the element to search')
+def list_elements(label):
     """ List elements from the database. 
     """
-    elements = find_all_elements(code=code)
+    elements = find_all_elements(label=label)
 
     for element in elements:
         click.echo(element)

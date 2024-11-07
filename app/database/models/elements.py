@@ -53,10 +53,10 @@ class Element(BaseElement):
         return f"{self.code} - {self.label} ({self.date}): {self.value}"
 
 
-def find_all_elements(code=None):
+def find_all_elements(label=None):
     """ Find all elements in the database.
     """
-    query = {"code": code} if code else {}
+    query = {"label": label} if label else {}
 
     elements = Element.find_all(query=query)
 

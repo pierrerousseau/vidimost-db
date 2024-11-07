@@ -71,7 +71,7 @@ def task_uvicorn():
     """
     def run_uvicorn():
         subprocess.run(['uvicorn', 'app:app', 
-                        '--reload', '--reload-exclude', 'data/**'], 
+                        '--reload', '--reload-exclude', 'data/*'], 
                        check=True)
 
     return {

@@ -73,3 +73,4 @@ def load_file(path, fmt_date=FMT_DATE):
                 except ValueError as e:
                     logging.warning(f"Ignored, no enough titles: {line}")
                     break
+
