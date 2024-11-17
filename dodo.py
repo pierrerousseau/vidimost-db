@@ -5,9 +5,10 @@ import subprocess
 
 
 # Constants
-CONFIG_PATH = "./app/settings"
-SRC_PATH    = "app"
-DOIT_CONFIG = {"backend": "json"}
+CONFIG_PATH  = "./app/settings"
+SRC_PATH     = "app"
+DOIT_CONFIG  = {"backend": "json"}
+DEFAULT_PORT = 5001
 # // Constants
 
 
@@ -70,8 +71,11 @@ def task_uvicorn():
     """ Lance la version uvicorn de l'application.
     """
     def run_uvicorn():
-        subprocess.run(['uvicorn', 'app:app', 
-                        '--reload', '--reload-exclude', 'data/*'], 
+        port = DEFAULT_PORT
+        subprocess.run(['uvicorn',
+                        '--port', f'{port}',
+                        '--reload', '--reload-exclude', 'data/*',
+                        'app:app'], 
                        check=True)
 
     return {

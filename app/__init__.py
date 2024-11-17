@@ -16,8 +16,8 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/elements")
-@app.get("/elements/{label}")
+@app.get("/api/elements")
+@app.get("/api/elements/{label}")
 def get_elements(label=None):
     """ Get the elements list.
     
